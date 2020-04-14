@@ -1,0 +1,56 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+
+networking:
+  # WARNING: It is _strongly_ recommended that you keep this the default
+  # (127.0.0.1) for security reasons. However it is possible to change this.
+  apiServerAddress: "127.0.0.1"
+
+  # By default the API server listens on a random open port.
+  # You may choose a specific port but probably don't need to in most cases.
+  # Using a random port makes it easier to spin up multiple clusters.
+  apiServerPort: 6443
+
+  # You may disable the default to install a different CNI. This is a power
+  # user feature with limited support, but many common CNI manifests are
+  # known to work, e.g. Calico.
+  disableDefaultCNI: true
+
+  podSubnet: "10.244.0.0/16"
+  serviceSubnet: "10.96.0.0/12"
+
+nodes:
+  # One control plane node and three "workers".
+  #
+  # While these will not add more real compute capacity and
+  # have limited isolation, this can be useful for testing
+  # rolling updates etc.
+  #
+  # The API-server and other control plane components will be
+  # on the control-plane node.
+  #
+  # You probably don't need this unless you are testing Kubernetes itself.
+  - role: control-plane
+    kubeadmConfigPatches:
+    - |
+      kind: InitConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "ingress-ready=true"
+          authorization-mode: "AlwaysAllow"
+    # port forward 80 and 443 on the host to 80 and 443 on this node
+    extraPortMappings:
+    - containerPort: 80
+      hostPort: 80
+      # optional: set the bind address on the host
+      # 0.0.0.0 is the current default
+      listenAddress: "127.0.0.1"
+      # optional: set the protocol to one of TCP, UDP, SCTP.
+      # TCP is the default
+      protocol: TCP
+    - containerPort: 443
+      hostPort: 443
+      listenAddress: "127.0.0.1"
+      protocol: TCP
+  - role: worker
+  - role: worker
