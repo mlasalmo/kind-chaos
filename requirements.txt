@@ -1,0 +1,5 @@
+chaostoolkit==1.4.1
+chaostoolkit-istio==0.1.4
+chaostoolkit-kubernetes==0.22.0
+chaostoolkit-slack==0.2.0
+slackclient==2.5.0
