@@ -1,8 +1,4 @@
----
-
-###
-# Reference: https://github.com/bitnami/charts/blob/master/bitnami/mongodb/values-production.yaml
-###
+## src: https://github.com/bitnami/charts/blob/master/bitnami/mongodb/values.yaml
 
 ## Global Docker image parameters
 ## Please, note that this will override the image parameters, including dependencies, configured to use the global value
@@ -295,7 +291,7 @@ extraVolumeMountsArbiter: []
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
 persistence:
-  enabled: false
+  enabled: true
   ## A manually managed Persistent Volume and Claim
   ## Requires persistence.enabled: true
   ## If defined, PVC must be created manually before volume will be bound
@@ -322,7 +318,7 @@ persistence:
   # storageClass: "-"
   accessModes:
     - ReadWriteOnce
-  size: 1Gi
+  size: 8Gi
   annotations: {}
 
 ## Configure the ingress resource that allows you to access the
@@ -447,7 +443,7 @@ configmap:
 ## Prometheus Exporter / Metrics
 ##
 metrics:
-  enabled: true
+  enabled: false
 
   image:
     registry: docker.io
@@ -468,13 +464,8 @@ metrics:
   ## Metrics exporter resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
-  resources:
-    limits:
-      cpu: 100m
-      memory: 64Mi
-    requests:
-      cpu: 100m
-      memory: 64Mi
+  # resources: {}
+
   ## Metrics exporter liveness and readiness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   livenessProbe:

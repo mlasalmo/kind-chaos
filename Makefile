@@ -7,29 +7,27 @@ help:
 	@grep -h -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: add-helm-repos
-add-helm-repos: ## Add bitnami and stable helm repository if not already installed
+add-helm-repos: ## Add needed helm repositories if not already added
 	@helm repo list | grep bitnami || helm repo add bitnami https://charts.bitnami.com/bitnami
 	@helm repo list | grep stable || helm repo add stable https://kubernetes-charts.storage.googleapis.com
 
 .PHONY: create-cluster
 create-cluster: add-helm-repos ## Create a kind single-node cluster
-	@kind create cluster || true
+	@kind get clusters | grep kind || kind create cluster
 	@helm install metrics-server stable/metrics-server \
-		--atomic \
 		--namespace kube-system \
 		--values conf.d/metrics-server.yml
-	@kubectl create namespace chaos-lab || true
+	@kubectl get namespace chaos-lab -o jsonpath='{.metadata.name}' || kubectl create namespace chaos-lab
 	@kubectl config set-context --current --namespace=chaos-lab
 
 .PHONY: create-cluster-ha add-helm-repos
 create-cluster-ha: add-helm-repos ## Create a kind multi-node cluster (1 control-plane, 2 workers)
-	@kind create cluster --config conf.d/multi-node.yml || true
+	@kind get clusters | grep kind || kind create cluster --config conf.d/multi-node.yml
 	@kubectl apply -f conf.d/calico.yml
 	@helm install metrics-server stable/metrics-server \
-		--atomic \
 		--namespace kube-system \
 		--values conf.d/metrics-server.yml
-	@kubectl create namespace chaos-lab || true
+	@kubectl get namespace chaos-lab -o jsonpath='{.metadata.name}' || kubectl create namespace chaos-lab
 	@kubectl label namespace chaos-lab istio-injection=enabled
 	@kubectl config set-context --current --namespace=chaos-lab
 
@@ -53,7 +51,7 @@ install-istio: ## Install istio in the current active cluster with demo profile 
 
 .PHONY: install-mongodb-ha
 install-mongodb-ha: ## Install mongodb with replicaset enabled (HA)
-	@kubectl create namespace chaos-db-lab || true
+	@kubectl get namespace chaos-db-lab -o jsonpath='{.metadata.name} || kubectl create namespace chaos-db-lab
 	@helm install go-demo-8-db bitnami/mongodb \
 		--namespace chaos-db-lab \
 		--values k8s-manifests/stack-ha/db/values.yml
