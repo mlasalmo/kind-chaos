@@ -35,7 +35,7 @@ image:
   ## Set to true if you would like to see extra information on logs
   ## It turns on Bitnami debugging in minideb-extras-base
   ## ref:  https://github.com/bitnami/minideb-extras-base
-  debug: false
+  debug: true
 
 ## String to partially override mongodb.fullname template (will maintain the release name)
 ##
@@ -91,12 +91,12 @@ usePassword: false
 ## Whether enable/disable IPv6 on MongoDB
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#enabling/disabling-ipv6
 ##
-mongodbEnableIPv6: false
+mongodbEnableIPv6: true
 
 ## Whether enable/disable DirectoryPerDB on MongoDB
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#enabling/disabling-directoryperdb
 ##
-mongodbDirectoryPerDB: false
+mongodbDirectoryPerDB: true
 
 ## MongoDB System Log configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb#configuring-system-log-verbosity-level
@@ -126,7 +126,7 @@ clusterDomain: cluster.local
 ## Kubernetes service type
 service:
   ## Specify an explicit service name.
-  # name: svc-mongo
+  name: go-demo-8-db-mongodb
   ## Provide any additional annotations which may be required.
   ## The value is evaluated as a template, so, for example, the value can depend on .Release or .Chart
   annotations: {}
@@ -178,21 +178,22 @@ replicaSet:
   ## Number of replicas per each node type
   ##
   replicas:
-    secondary: 1
     arbiter: 1
+    primary: 1
+    secondary: 1
 
   ## Pod Disruption Budget
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
   pdb:
     enabled: true
     minAvailable:
+      arbiter: 1
       primary: 1
       secondary: 1
-      arbiter: 1
       # maxUnavailable:
+      # arbiter: 1
       # primary: 1
       # secondary: 1
-      # arbiter: 1
 
 # Annotations to be added to the deployment or statefulsets
 annotations: {}
@@ -318,7 +319,7 @@ persistence:
   # storageClass: "-"
   accessModes:
     - ReadWriteOnce
-  size: 8Gi
+  size: 1Gi
   annotations: {}
 
 ## Configure the ingress resource that allows you to access the
@@ -443,7 +444,7 @@ configmap:
 ## Prometheus Exporter / Metrics
 ##
 metrics:
-  enabled: false
+  enabled: true
 
   image:
     registry: docker.io
@@ -469,14 +470,14 @@ metrics:
   ## Metrics exporter liveness and readiness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   livenessProbe:
-    enabled: false
+    enabled: true
     initialDelaySeconds: 15
     periodSeconds: 5
     timeoutSeconds: 5
     failureThreshold: 3
     successThreshold: 1
   readinessProbe:
-    enabled: false
+    enabled: true
     initialDelaySeconds: 5
     periodSeconds: 5
     timeoutSeconds: 1
