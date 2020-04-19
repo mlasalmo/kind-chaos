@@ -42,17 +42,17 @@ install-demo: ## Install go-demo-8 and go-demo-8-db in standalone mode
 	@kubectl apply --filename k8s-manifests/stack-standalone/ --namespace ${NAMESPACE} --recursive
 
 .PHONY: install-demo-ha
-install-demo-ha: ## Install go-demo-8 and repeater in HA mode
+install-demo-ha: install-istio ## Install go-demo-8 and repeater in HA mode
 	@kubectl apply --filename k8s-manifests/stack-ha/app/ --namespace ${NAMESPACE}
 	@kubectl apply --filename k8s-manifests/stack-ha/repeater/ --namespace ${NAMESPACE}
 
 
 .PHONY: install-istio
 install-istio: ## Install istio in the current active cluster with demo profile (addons enabled: grafana, kiali, prometheus, and tracing)
-	@istioctl manifest apply --set profile=demo
+	@kubectl get namespace istio-system -o jsonpath='{.metadata.name}' || istioctl manifest apply --set profile=demo
 
 .PHONY: install-mongodb-ha
-install-mongodb-ha: ## Install mongodb with replicaset enabled (HA)
+install-mongodb-ha: install-istio ## Install mongodb with replicaset enabled (HA)
 	@kubectl get namespace ${NAMESPACE} -o jsonpath='{.metadata.name}' || kubectl create namespace ${NAMESPACE}
 	@helm install go-demo-8-db bitnami/mongodb \
 		--namespace ${NAMESPACE} \

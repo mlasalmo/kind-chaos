@@ -62,14 +62,14 @@ podAnnotations: {}
 # priorityClassName: system-node-critical
 
 extraVolumeMounts: []
-#  - name: secrets
-#    mountPath: /etc/kubernetes/secrets
-#    readOnly: true
+# - name: secrets
+#   mountPath: /etc/kubernetes/secrets
+#   readOnly: true
 
 extraVolumes: []
-#  - name: secrets
-#    secret:
-#      secretName: kube-apiserver
+# - name: secrets
+#   secret:
+#     secretName: kube-apiserver
 
 livenessProbe:
   httpGet:
@@ -97,7 +97,7 @@ securityContext:
 service:
   annotations: {}
   labels:
-  #  Add these labels to have metrics-server show up in `kubectl cluster-info`
+  # Add these labels to have metrics-server show up in `kubectl cluster-info`
     kubernetes.io/cluster-service: "true"
     kubernetes.io/name: "Metrics-server"
   port: 443

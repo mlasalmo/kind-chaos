@@ -39,15 +39,15 @@ pip install -r requirements.txt
 
 ## How this project works
 
-Run `make` and check all actions:
+Run `make` to check all available actions:
 
 ```txt
+add-helm-repos                 Add needed helm repositories if not already added
 create-cluster                 Create a kind single-node cluster
 create-cluster-ha              Create a kind multi-node cluster (1 control-plane, 2 workers)
 destroy                        Destroy kind cluster
 install-demo                   Install go-demo-8 and go-demo-8-db in standalone mode
 install-demo-ha                Install go-demo-8 and repeater in HA mode
-install-helm-repos             Install bitnami and stable helm repositories
 install-istio                  Install istio in the current active cluster with demo profile (addons enabled: grafana, kiali, prometheus, and tracing)
 install-mongodb-ha             Install mongodb with replicaset enabled (HA)
 ls                             List of up & running kind clusters

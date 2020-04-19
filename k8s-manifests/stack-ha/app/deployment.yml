@@ -23,7 +23,7 @@ spec:
         image: vfarcic/go-demo-8:0.0.1
         env:
         - name: DB
-          value: go-demo-8-db-mongodb.chaos-db-lab.svc.cluster.local
+          value: go-demo-8-db-mongodb
         - name: VERSION
           value: "0.0.1"
         ports:
