@@ -1,2 +1,3 @@
+conf.d/istio-*-profile-generated-manifest.yml
 chaostoolkit.log
 journal.json
